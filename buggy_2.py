@@ -17,7 +17,8 @@ def load(path):
 
 def summarize(df):
     # 단가 x 수량으로 매출액 컬럼을 만든 뒤 카테고리별 합계를 낸다
-    df["매출액"] = df["단가"] * df["수량"]        # <-- 여기가 문제의 줄
+    # FIXED: 존재하지 않는 '단가', '수량' 한글 키를 실제 파일 헤더인 'price', 'quantity'로 수정
+    df["매출액"] = df["price"] * df["quantity"]
     return df.groupby("category")["매출액"].sum()
 
 if __name__ == "__main__":

@@ -24,7 +24,12 @@ def main():
                               .str.strip())
     df["price"] = pd.to_numeric(df["price"], errors="coerce")
 
-    # 매출액 = 단가 x 수량 (NaN이 섞이면 그 행의 매출액도 NaN)
+    # FIXED: 결측치(NaN)가 포함된 행 제거
+    df = df.dropna(subset=["price"])
+
+    # FIXED: 입력 오류(음수) 및 극단적 이상치(플레이스홀더)를 도메인 기준으로 필터링
+    df = df[(df["price"] > 0) & (df["price"] < 1000000)]
+
     df["revenue"] = df["price"] * df["quantity"]
 
     # sum()은 NaN을 조용히 건너뛰고, 음수/극단값은 그대로 더한다
